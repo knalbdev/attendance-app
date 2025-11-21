@@ -1,6 +1,5 @@
 import 'package:attendance_app/models/attendance_record.dart';
 import 'package:attendance_app/screens/home/widgets/camera_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
