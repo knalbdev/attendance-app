@@ -30,9 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _listenToTodayRecord() {
     final user = _authServices.currentUser;
     if (user != null) {
-      _firestoreService.getTodayRecordStream(user.uid).listen((record) {
-        if (mounted) setState(() => _todayRecord = record);
-      });
+      _firestoreService.getTodayRecordStream(user.uid).listen(
+        (record) {
+          if (mounted) setState(() => _todayRecord = record);
+        },
+        onError: (e) {
+          debugPrint('Error getting today record: $e');
+        },
+      );
     }
   }
 
@@ -166,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Colors.blue[700]!,
               Colors.grey[50]!
             ],
-            stops: [0, 0, 0.3]
+            stops: [0.0, 0.3]
           )
         ),
         child: SingleChildScrollView(
