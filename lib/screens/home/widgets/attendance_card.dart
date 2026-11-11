@@ -138,7 +138,7 @@ class _TimeRow extends StatelessWidget {
   final String value;
   final Color color;
 
-  const _TimeRow({super.key, required this.icon, required this.label, required this.value, required this.color});
+  const _TimeRow({required this.icon, required this.label, required this.value, required this.color});
 
   @override
   Widget build(BuildContext context) {

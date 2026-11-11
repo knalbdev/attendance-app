@@ -156,7 +156,7 @@ class _InfoColumn extends StatelessWidget {
   final String label;
   final String value;
 
-  const _InfoColumn({super.key, required this.icon, required this.label, required this.value});
+  const _InfoColumn({required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {

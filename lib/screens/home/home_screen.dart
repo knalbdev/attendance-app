@@ -4,6 +4,7 @@ import 'package:attendance_app/screens/home/widgets/attendance_card.dart';
 import 'package:attendance_app/screens/home/widgets/profile_card.dart';
 import 'package:attendance_app/services/auth_services.dart';
 import 'package:attendance_app/services/firestore_service.dart';
+import 'package:attendance_app/services/permission_service.dart';
 import 'package:attendance_app/services/storage_services.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _listenToTodayRecord();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PermissionService().requestCameraPermissionOnInit(context: context);
+    });
   }
 
   void _listenToTodayRecord() {

@@ -109,7 +109,7 @@ class _ActionButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
 
-  const _ActionButton({super.key, required this.label, required this.icon, required this.color, this.onPressed, required this.isLoading});
+  const _ActionButton({required this.label, required this.icon, required this.color, this.onPressed, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -152,21 +152,20 @@ class _PhotoButton extends StatelessWidget {
   final Function(String) onImageCaptured;
   final bool isLoading;
 
-  const _PhotoButton({super.key, required this.label, required this.color, required this.onImageCaptured, required this.isLoading});
+  const _PhotoButton({
+    required this.label,
+    required this.color,
+    required this.onImageCaptured,
+    required this.isLoading,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: isLoading ? null : null,
-      style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        side: BorderSide(color: color, width: 2)
-      ),
-      child: CameraButton(
-        buttonText: label,
-        onImageCaptured: onImageCaptured,
-      ),
+    return CameraButton(
+      buttonText: label,
+      color: color,
+      isLoading: isLoading,
+      onImageCaptured: onImageCaptured,
     );
   }
 }

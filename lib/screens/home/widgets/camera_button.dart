@@ -1,51 +1,32 @@
+import 'package:attendance_app/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class CameraButton extends StatelessWidget {
   final Function(String imagePath) onImageCaptured;
   final String buttonText;
+  final Color? color;
+  final bool isLoading;
 
-  const CameraButton({super.key, required this.onImageCaptured, required this.buttonText});
+  const CameraButton({
+    super.key,
+    required this.onImageCaptured,
+    required this.buttonText,
+    this.color,
+    this.isLoading = false,
+  });
 
   Future<void> _takePhoto(BuildContext context) async {
     try {
-      // request camera permission
-      final status = await Permission.camera.request();
-
-      if (status.isDenied) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Camera permission is required to take photos'),
-              backgroundColor: Colors.orange,
-            )
-          );
-        }
-        return;
-      }
-
-      if (status.isPermanentlyDenied) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Camera permission denied. Please enable in settings.'),
-              backgroundColor: Colors.red,
-              action: SnackBarAction(
-                label: 'Settings',
-                onPressed: () => openAppSettings(),
-              ),
-            )
-          );
-        }
-        return;
-      }
+      // Validasi izin kamera melalui PermissionService (modular)
+      final hasPermission = await PermissionService().ensureCameraPermission(context);
+      if (!hasPermission) return;
 
       final ImagePicker picker = ImagePicker();
       final XFile? photo = await picker.pickImage(
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
-        imageQuality: 70, // compressed image
+        imageQuality: 70, // Kompresi awal gambar
       );
 
       if (photo != null) {
@@ -55,9 +36,9 @@ class CameraButton extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error taking photo: ${e.toString()}'),
+            content: Text('Gagal mengambil foto: ${e.toString()}'),
             backgroundColor: Colors.red,
-          )
+          ),
         );
       }
     }
@@ -65,15 +46,20 @@ class CameraButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => _takePhoto(context),
-      icon: Icon(Icons.camera_alt),
-      label: Text(buttonText),
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12
-        )
+    final themeColor = color ?? Colors.blue[600]!;
+
+    return OutlinedButton.icon(
+      onPressed: isLoading ? null : () => _takePhoto(context),
+      icon: const Icon(Icons.camera_alt_rounded, size: 20),
+      label: Text(
+        buttonText,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: themeColor,
+        side: BorderSide(color: themeColor, width: 2),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
